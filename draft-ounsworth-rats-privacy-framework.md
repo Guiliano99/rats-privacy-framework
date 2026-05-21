@@ -382,7 +382,7 @@ Where the content of the claims could be subject to legal data retention or data
 
 # Privacy Considerations
 
-The main privacy principle in this document is recipient-specific data minimization.
+The main privacy principle in this document is categorization of claims according to sensitivity level, protection of Evidence against passive eavesdroppers, and recipient-specific data minimization.
 Each party SHOULD receive only the Evidence, Attestation Result claims, or proof outputs needed for its role.
 Deployments need to evaluate each protocol role separately because a privacy control at one release point can be undone by excessive disclosure at a later release point.
 
