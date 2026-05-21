@@ -147,7 +147,7 @@ RFC 6973 defines a Relying Party as an entity that relies on assertions of ident
 The RATS Relying Party role is similar in that it relies on assertions produced by another party, namely Attestation Results produced by a RATS Verifier.
 
 The RATS Verifier can act as an Identity Provider vouching for the identity of the Attester in the limited sense that it can include identifier claims in Attestation Results, but RATS Verifier goes beyond the scope of [RFC6973] establishing, maintaining, securing, and vouching for claims about the entire posture of Attester beyond merely its identity.
-However, this analogy is not intended to be read too broadly.
+Therefore,, this analogy is not intended to be read too broadly.
 A RATS Verifier typically vouches for attributes of a device, workload, execution environment, or composite Attester, not for the identity of a human individual.
 The Attestation Result might contain a device Identifier, a pseudonymous Attester Identifier, a set of attributes, a policy decision, or a proof about such attributes.
 Only in deployments where the Attester is bound to an individual, or where Evidence carries user authentication material, does the Verifier's output become an assertion about a human identity.
@@ -165,13 +165,13 @@ In the **Passport Model**, the Attester obtains an Attestation Result from a Ver
 The Relying Party does not need to carry raw Evidence to the Verifier.
 This topology is generally preferable when the privacy goal is to keep raw Evidence away from Relying Parties.
 If the Attester-to-Verifier and Attester-to-Relying-Party channels are protected with TLS or equivalent channel security, encrypting Evidence as an object provides less incremental protection against network eavesdroppers than it does in the Background-Check Model.
-However, object encryption can still be useful for protecting Evidence from intermediaries, logging systems, queueing infrastructure, or Presenters that are not authorized to inspect the Evidence.
+However, object encryption can still be useful for protecting Evidence from intermediaries, logging systems, queueing infrastructure, or Presenters that are not authorized to inspect the Evidence, which is especially relevant in cloud environments where TLS is terminated at the network edge.
 In the Passport Model, the main privacy challenge usually moves from Evidence confidentiality to Attestation Result minimization.
 
 In the **Background-Check Model**, the Relying Party obtains Evidence from the Attester and sends it to the Verifier.
 This topology creates a stronger privacy risk because the Relying Party is on the Evidence path.
 If the Evidence is only protected by TLS on each hop, the Relying Party can observe, log, retain, or correlate the Evidence.
-Encrypting the Evidence for the Verifier changes this property: the Relying Party can carry the Evidence to the Verifier without learning its sensitive contents.
+Encrypting the Evidence for the Verifier changes this property: the Relying Party can carry the Evidence to the Verifier without learning its sensitive contents, or being legally responsible for the correct handling of this content.
 Therefore, encrypted Evidence provides a direct privacy benefit in the Background-Check Model.
 Nevertheless, the Background-Check Model still requires careful minimization of the Attestation Result returned to the Relying Party.
 If the result reveals the same sensitive details that were hidden in the encrypted Evidence, the privacy gain is lost.
@@ -187,7 +187,7 @@ Implementations need to analyze which roles can observe Evidence, which roles ca
 
 For the purposes of this document, an attestation client is either an Attester directly, or a Presenter acting as a proxy between the Attester and the Verifier.
 A conforming client is responsible for classifying every Evidence claim that it is capable of producing according to the following categories.
-Verifiers producing Attestation Results SHOULD apply the same classification to claims and conclusions in Attestation Results.
+Verifiers producing Attestation Results SHOULD also be aware of the classification of claims in a given Evidence format, and have appropriate policy for transforming sensitive claims into Attestation Results.
 For example, if a firmware version claim would be Vendor Info in Evidence, then an Attestation Result claim that reveals the same firmware version is also Vendor Info.
 
 ## Identity-Related Information
@@ -205,7 +205,7 @@ An Attester Identifier is any data object that uniquely refers to a specific Att
 This category applies the RFC 6973 concept of an Identifier to RATS protocol entities and subjects.
 Attester Identifiers include the obvious things such as serial numbers of either the device or of certificates issued to the device, cryptographic public keys, persistent pseudonyms, static addresses, and stable key identifiers.
 
-Sometimes Attester Identifiers are hiding in places that even the implementers might not be aware of, such as DNs, certificate serial numbers, public keys of certificates issued to the hardware at manufacture-time, or stable values in Endorsements.
+Sometimes Attester Identifiers are hiding in places that even the implementers might not be aware of, such as DNs, certificate serial numbers, public keys of certificates issued to the hardware at manufacture-time, or stable values in Endorsements. Implementers need to be especially aware of multiple claims being used in aggregate to form a stable fingerprint that can be used as a stand-in for an identifier, as described in the next section.
 Attester Identifiers are privacy-sensitive because they enable correlation across protocol interactions, Relying Parties, or administrative domains.
 
 ## Fingerprints
@@ -224,7 +224,7 @@ Vendor Info is any Evidence claim that can be used, in isolation or in aggregate
 Obvious examples include version information about hardware, firmware, and software, or manufacturer-issued certificates.
 Implementers SHOULD also consider fingerprints that are unique to a given device model or manufacturer, which could include hashes of firmware or software.
 
-The main privacy concern is that Vendor Info can enable policy decisions based on implementation provenance rather than protocol compliance, including proprietary vendor lock-in, forced obsolescence, or other exclusion of otherwise compliant implementations.
+The main privacy concern is that Vendor Info can enable policy decisions based on implementation provenance rather than protocol compliance, including proprietary vendor lock-in, forced obsolescence, or other exclusion of otherwise compliant and interoperable implementations.
 Such policies can be appropriate within an explicit administrative trust boundary, such as an enterprise network, datacenter, or managed service environment.
 In open Internet deployments, devices SHOULD NOT disclose Vendor Info unless the device owner has explicitly consented to onboard the device into a service or network that requires this visibility.
 
@@ -236,20 +236,20 @@ This document does not preclude the development of further categories of sensiti
 
 # Technical Framework
 
-The technical framework presented here requires conformant implementations to apply privacy controls at two different release points.
+The technical framework presented here requires conformant implementations to apply privacy controls at two different information disclosure points.
 
 First, Attesters and Presenters control release of Evidence to Verifiers.
-They maintain lists of Trusted Verifiers and the categories of sensitive claims that those Verifiers are authorized to request.
+They maintain lists of Trusted Verifiers (either directly, or via chaining to a store of trusted roots) and the categories of sensitive claims that those Verifiers are authorized to request.
 Verifiers requesting sensitive claims are required to provide an encryption credential compatible with the object security mechanism used by the deployment, such as COSE or JOSE HPKE, so that Evidence can be encrypted for them.
 
 Second, Verifiers control release of Attestation Results to Relying Parties.
-They minimize the content of Attestation Results and use Selective Disclosure or Zero-Knowledge Proofs when the Relying Party's policy can be satisfied without revealing detailed claims.
+They minimize the content of Attestation Results and MAY use Attestation Result formats based on Selective Disclosure or Zero-Knowledge Proof technologies when the Relying Party's policy can be satisfied without revealing detailed claims.
 
 ## Trusted Verifiers
 
 Conformant Clients, which could be either an Attester directly, or a Presenter acting as a proxy for the Attester, MUST have a mechanism to maintain trust anchor stores representing Trusted Verifiers. The trust anchors could be self-signed certificates, public keys such as those described in {{?RFC7250}}, {{?RFC5280}}, and {{?RFC5914}}, or JWK keys as per {{?RFC7517}}. The details of maintaining a trust anchor store and performing path validation against the trust anchor store are out of scope of this document.
 
-Conformant Clients SHOULD have a mechanism to identify which Trusted Verifiers are authorized to request which categories of sensitive claims, though clients MAY opt for a simpler all-or-nothing approach where a Trusted Verifier can view all categories.
+Conformant Clients SHOULD have a mechanism to restrict released information based on the authorization level of the Verifier. A simple all-or-nothing approach would be refuse to return any Evidence except to authorized Verifiers who can access the entire content. Or, an Attester might have a "public" version of the Evidence with only minimal content. Or, an Attester might have a complex mechanism to authorize a given Verifier for a given category of claims or even for specific claims.
 
 
 ## Evidence Encryption
@@ -265,6 +265,8 @@ For standardized Entity Attestation Token (EAT) Evidence {{!RFC9711}}, the follo
 For CBOR/COSE-encoded Evidence, deployments SHOULD use COSE encryption structures with COSE HPKE {{COSE-HPKE}}.
 For JSON/JOSE-encoded Evidence, deployments SHOULD use JOSE encryption structures with JOSE HPKE {{JOSE-HPKE}}.
 When the Conceptual Message Wrapper (CMW) {{CMW}} is used, the choice of encryption envelope SHOULD match the underlying Evidence encoding in order to reduce parser burden.
+
+This specification does not preclude the development of additional or proprietary Evidence formats which are free to specify their own object encryption mechanism, provided that it is compliant with the privacy objectives laid out in this document.
 
 Object encryption does not replace channel security.
 Attester-to-Verifier, Attester-to-Relying-Party, Relying-Party-to-Verifier, and Verifier-to-Relying-Party interfaces SHOULD use TLS or equivalent channel protection.
@@ -297,7 +299,7 @@ The policy SHOULD be at least as strict as the policy used by Attesters and Pres
 
 ## Selective Disclosure in Attestation Results
 
-Selective Disclosure is useful when an Attestation Result contains multiple claims, but a Relying Party is authorized to learn only a subset of them.
+Selective Disclosure is useful when an Attestation Result contains multiple claims, but a Relying Party is authorized to learn only a subset of them and the Verifier does not want to, or due to the network protocol is not capable of, producing per-Relying Party Attestation Results.
 In this model, the Verifier acts as the issuer of a privacy-preserving Attestation Result, the Attester or Presenter acts as the holder that chooses which disclosable claims to present, and the Relying Party acts as the verifier of that selectively disclosed result.
 This role mapping is separate from the RATS role named Verifier.
 
@@ -364,6 +366,7 @@ This document relies on the security of the underlying RATS architecture {{?RFC9
 
 Encrypting Evidence for the Verifier protects confidentiality but does not by itself prove that the Verifier is authorized to receive the requested claims.
 Attesters and Presenters MUST authenticate the Verifier's encryption credential and check it against the applicable trust anchor store and claim-category authorization policy before releasing sensitive Evidence.
+Furthermore, this provides only implicit authentication of the Verifier under the assumption that only a Verifier in possession of the corresponding private key will be able to decrypt the Evidence instead of an explicit authentication step prior to transmitting the Evidence. For most deployments, this difference will be inconsequential.
 
 Evidence encryption needs integrity and context binding.
 If a ciphertext can be replayed, redirected to a different Verifier, or detached from the Relying Party challenge that caused its creation, then an attacker might cause stale or unintended Evidence to be appraised.
