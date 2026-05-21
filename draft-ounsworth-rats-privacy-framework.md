@@ -104,6 +104,8 @@ The 2023 IAB Statement on the Risks of Attestation of Software and Hardware on t
 Overly-verbose Attestation Results can further propagate the privacy risks even when the original Evidence is never disclosed to the Relying Party.
 The privacy problem is therefore multi-faceted: sensitive Evidence needs to be protected from passive eavesdroppers in transit to the Verifier, the Verifier needs to be authenticated and authorized to view sensitive Evidence, and Attestation Results disclosed to Relying Parties needs to minimize the inclusion of sensitive claims.
 
+In addition to claims being privacy sensitive, they can also be sensitive in a security sense; being able to view the complete configuration state of a device can greatly aid an attacker in compromising that device for example the manifest of firmware and software versions tells an attacker which known vulnerabilities to try, and the configuration state of the device (such as an increase in the boot counter) could give the attacker confirmation that the attack was successful.
+
 ## Threat Surfaces
 
 This document distinguishes three privacy threat surfaces.
