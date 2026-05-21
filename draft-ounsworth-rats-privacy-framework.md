@@ -387,7 +387,7 @@ Each party SHOULD receive only the Evidence, Attestation Result claims, or proof
 Deployments need to evaluate each protocol role separately because a privacy control at one release point can be undone by excessive disclosure at a later release point.
 
 The Background-Check Model has greater Evidence-disclosure risk than the Passport Model because the Relying Party is on the Evidence path.
-Encrypting Evidence for the Verifier is therefore especially important in the Background-Check Model.
+Encrypting Evidence for the Verifier, and proper authentication of the Verifier's encryption key against a trust store, is therefore especially important in the Background-Check Model.
 However, encrypted Evidence does not help if the Attestation Result later reveals the same details to the Relying Party.
 
 Attestation Results can create linkability even when they do not contain obvious identifiers.
