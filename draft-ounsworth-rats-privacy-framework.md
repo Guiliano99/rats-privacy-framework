@@ -406,8 +406,7 @@ Deployments still need to minimize stable metadata, issuer identifiers, key-bind
 
 # IANA Considerations
 
-This document has no IANA actions, unless the EKU OID `id-kp-tbd-evidence-encryption` is registered here instead of in a sister LAMPS document.
-
+TBD: The EKU OID `id-kp-tbd-evidence-encryption` needs to be registered here
 
 --- back
 
