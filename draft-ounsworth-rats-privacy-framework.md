@@ -77,7 +77,7 @@ informative:
 
 --- abstract
 
-Remote Attestation Evidence and Attestation Results can reveal sensitive measurements, stable identifiers, device fingerprints, vendor information, or conclusions derived from Evidence.  This document defines a privacy framework for Remote Attestation that identifies excessive disclosure to Verifiers and to Relying Parties, and disclosure to eavesdroppers as threat surfaces; classifies claims produced by Attesters and Presenters; restricts sensitive Evidence to authorized Trusted Verifiers using confidentiality protection; and describes privacy-preserving Attestation Results based on data minimization, Selective Disclosure, and Zero-Knowledge Proofs.
+This document identifies an omission in the Remote ATestation procedureS architecture where an Attester can be forced to disclose sensitive information to a malicious Verifier, or victim Verifier to a malicious Relying Party. This over-disclosure can include revealing sensitive measurements, stable identifiers, device fingerprints, vendor information, or conclusions derived from Evidence. We term this "Coercive use of RATS".  This document defines a privacy framework for Remote Attestation that identifies this threat surfaces; classifies claims produced by Attesters and Presenters; restricts sensitive Evidence to authorized Trusted Verifiers using confidentiality protection; and describes privacy-preserving Attestation Results based on data minimization, Selective Disclosure, and Zero-Knowledge Proofs.
 
 --- middle
 
@@ -87,7 +87,9 @@ Remote Attestation Evidence and Attestation Results can reveal sensitive measure
 
 In its conception, remote attestation focuses on measured boot where Evidence typically consists of measurements of hardware, firmware, and software components.
 This data is often treated as operational security data rather than privacy-sensitive data.
+The RATS Architecture {{!RFC9334}} assumes that the purpose of remote attestation is for the Attester to prove its own trustworthiness to a Verifier or Relying Party, but it does not consider that the Verifier or Relying Party could be malicious and coercively using Remote Attestation to extract sensitive data from an Attester.
 This document challenges that assumption and provides a framework under which remote attestation technology can safely grow to include sensitive claims and sensitive conclusions derived from those claims.
+This motivates the need for the Verifier or Relying Party to be authenticated and for the Attester producing Evidence and the honest Verifier producing Attestation Results to minimize the amount of data disclosed.
 
 This document uses the privacy terminology from {{?RFC6973}} rather than relying on jurisdiction-specific legal terms.
 RFC 6973 defines an Identity as any subset of an individual's attributes, including names, that identifies the individual within a given context.
