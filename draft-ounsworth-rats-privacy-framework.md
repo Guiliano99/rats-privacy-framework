@@ -399,7 +399,7 @@ However, encrypted Evidence does not help if the Attestation Result later reveal
 
 Attestation Results can create linkability even when they do not contain obvious identifiers.
 Combinations of claim values, credential type, issuer, issuance time, validity window, policy identifiers, and proof metadata can become a fingerprint.
-In the case where the Evidence is used to issue a credential such as an X.509 certificate {{?draft-ietf-lamps-csr-attestation-26}}, that certificate acts as an Attestation Result, and the credential itself becomes a fingerprint that can be used to link any subsequent use of the credential back to the Attester.
+In the case where the Evidence is used to issue a credential such as an X.509 certificate {{?I-D.ietf-lamps-csr-attestation}}, that certificate acts as an Attestation Result, and the credential itself becomes a fingerprint that can be used to link any subsequent use of the credential back to the Attester.
 Profiles of this framework SHOULD consider pairwise identifiers, short validity periods, unlinkable presentations, selective disclosure, and ZKP-based predicates where appropriate.
 Pairwise identifiers reduce correlation by using different identifiers for different Relying Parties or audiences instead of a globally stable Attester identifier.
 Short validity periods, nonces, and audience restrictions reduce the value of an Attestation Result as a replayable or long-lived correlation handle.
