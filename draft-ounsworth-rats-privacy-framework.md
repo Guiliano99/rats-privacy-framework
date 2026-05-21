@@ -144,7 +144,7 @@ This includes conventional data minimization, Selective Disclosure, and Zero-Kno
 RFC 6973 defines a Relying Party as an entity that relies on assertions of identities from Identity Providers in order to provide services.
 The RATS Relying Party role is similar in that it relies on assertions produced by another party, namely Attestation Results produced by a RATS Verifier.
 
-The RATS Verifier can therefore act like an Identity Provider for the Attester in the limited sense that it establishes, maintains, secures, and vouches for claims about the Attester.
+The RATS Verifier can act as an Identity Provider vouching for the identity of the Attester in the limited sense that it can include identifier claims in Attestation Results, but RATS Verifier goes beyond the scope of [RFC6973] establishing, maintaining, securing, and vouching for claims about the entire posture of Attester beyond merely its identity.
 However, this analogy is not intended to be read too broadly.
 A RATS Verifier typically vouches for attributes of a device, workload, execution environment, or composite Attester, not for the identity of a human individual.
 The Attestation Result might contain a device Identifier, a pseudonymous Attester Identifier, a set of attributes, a policy decision, or a proof about such attributes.
