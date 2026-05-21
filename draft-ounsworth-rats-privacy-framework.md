@@ -102,7 +102,7 @@ This document also defines Vendor Info as a sensitive category of remote attesta
 The 2023 IAB Statement on the Risks of Attestation of Software and Hardware on the Open Internet {{IAB-Statement-2023}} does not use this term, but discusses the related risk that attestation mechanisms can be used to restrict access to otherwise open services based on client software or hardware properties.
 
 Attestation Results can carry the same privacy risks even when the original Evidence is never disclosed to the Relying Party.
-The privacy problem is therefore not only the protection of Evidence in transit to the Verifier, but also the minimization of Attestation Results disclosed to Relying Parties.
+The privacy problem is therefore multi-faceted: sensitive Evidence needs to be protected from passive eavesdroppers in transit to the Verifier, the Verifier needs to be authenticated and authorized to view sensitive Evidence, and Attestation Results disclosed to Relying Parties needs to minimize the inclusion of sensitive claims.
 
 ## Threat Surfaces
 
