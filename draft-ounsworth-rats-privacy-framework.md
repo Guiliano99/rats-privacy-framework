@@ -377,6 +377,7 @@ Failure to validate any of these can turn a privacy-preserving presentation into
 
 Object encryption and TLS do not prevent an authorized recipient from retaining data after decryption.
 Deployments handling sensitive Evidence or Attestation Results SHOULD define retention, logging, and audit requirements for Verifiers and Relying Parties.
+Where the content of the claims could be subject to legal data retention or data handling regulations, decryption and processing of the Evidence SHOULD be done within a contained Verifier module.
 
 
 # Privacy Considerations
