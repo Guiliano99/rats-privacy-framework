@@ -45,9 +45,19 @@ jobs:
       with:
         token: ${{ github.token }}
 
+    - name: "Detect GitHub Pages Branch"
+      id: ghpages
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        if git ls-remote --exit-code --heads origin gh-pages >/dev/null; then
+          echo "exists=true" >>"$GITHUB_OUTPUT"
+        else
+          echo "exists=false" >>"$GITHUB_OUTPUT"
+        fi
+
     - name: "Update GitHub Pages"
       uses: martinthomson/i-d-template@v1
-      if: ${{ github.event_name == 'push' }}
+      if: ${{ github.event_name == 'push' && steps.ghpages.outputs.exists == 'true' }}
       with:
         make: gh-pages
         token: ${{ github.token }}
